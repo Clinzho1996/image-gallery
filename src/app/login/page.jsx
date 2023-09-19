@@ -50,6 +50,28 @@ const Login = () => {
     <div className={styles.container}>
       <h1 className={styles.title}>{success ? success : "Welcome Back"}</h1>
       <h2 className={styles.subtitle}>Please sign in to use features</h2>
+      <p className={styles.details}>
+        <span
+          style={{
+            color: "#f84e61",
+            marginRight: "10px",
+          }}
+        >
+          Email:
+        </span>
+        user@example.com
+      </p>{" "}
+      <p className={styles.details}>
+        <span
+          style={{
+            color: "#f84e61",
+            marginRight: "10px",
+          }}
+        >
+          Password:
+        </span>
+        1Password
+      </p>
       <form onSubmit={handleSubmit} className={styles.form}>
         <input
           type="text"
