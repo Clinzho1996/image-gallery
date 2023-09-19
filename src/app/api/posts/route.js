@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import connect from "@/utils/db";
 import Post from "@/app/models/Post";
+import connect from "@/app/utils/db";
 
 export const GET = async (request) => {
   const url = new URL(request.url);
