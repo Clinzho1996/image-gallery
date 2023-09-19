@@ -2,21 +2,25 @@
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
 const Login = () => {
   const session = useSession();
   const router = useRouter();
+  const params = useSearchParams();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   useEffect(() => {
-    const queryError = router.query?.error;
-    setError(queryError ? decodeURIComponent(queryError) : "");
-    setSuccess(router.query?.success || "");
-  }, [router.query]);
+    setError(params.get("error"));
+    setSuccess(params.get("success"));
+    if (session.status === "authenticated") {
+      router?.push("/");
+    }
+  }, [params, session.status, router]);
 
   if (session.status === "loading") {
     return (
@@ -39,10 +43,12 @@ const Login = () => {
       await signIn("credentials", {
         email,
         password,
+        redirect: false,
       });
-      // If successful, it won't reach here, and you should rely on the session status change
+      setFormSubmitted(true);
     } catch (error) {
-      setError("Invalid email or password"); // Set the error message
+      setError("Invalid email or password");
+      setFormSubmitted(true);
     }
   };
 
@@ -86,9 +92,10 @@ const Login = () => {
           className={styles.input}
         />
         <button className={styles.button}>Login</button>
+        {formSubmitted && error !== "" && (
+          <p style={{ color: "red" }}>Something went wrong!</p>
+        )}
       </form>
-      {error && <p className={styles.error}>{error}</p>}{" "}
-      {/* Display error message */}
       <span className={styles.or}>- OR -</span>
       <Link className={styles.link} href="/register">
         Create a new account
