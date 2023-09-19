@@ -136,7 +136,7 @@ function Home() {
           <span className={styles.select}>Drop images here</span>
         ) : (
           <>
-            Drag images here{" "}
+            Drop image here{" "}
             <span
               className={styles.selectBrowse}
               id="select"
