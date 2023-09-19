@@ -118,7 +118,7 @@ function Home() {
     // Automatically reload the app after a few seconds
     setTimeout(() => {
       window.location.reload();
-    }, 3000); // Reload after 3 seconds
+    }, 1000); // Reload after 3 seconds
   }
 
   return (

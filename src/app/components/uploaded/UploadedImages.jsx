@@ -25,22 +25,29 @@ function UploadedImages() {
 
     const sourceIndex = result.source.index;
     const destinationIndex = result.destination.index;
-    const draggedImage = uploaded[sourceIndex];
+    const sourceDroppableId = result.source.droppableId;
+    const destinationDroppableId = result.destination.droppableId;
 
     let updatedUploadedImages = [...uploaded];
     let updatedDroppedImages = [...droppedImages];
 
+    // Get the dragged image from the appropriate source
+    const draggedImage =
+      sourceDroppableId === "uploaded-images"
+        ? updatedUploadedImages[sourceIndex]
+        : updatedDroppedImages[sourceIndex];
+
     // Remove the image from its previous tab
-    if (result.source.droppableId === "uploaded-images") {
+    if (sourceDroppableId === "uploaded-images") {
       updatedUploadedImages.splice(sourceIndex, 1);
-    } else if (result.source.droppableId === "dropped-images") {
+    } else if (sourceDroppableId === "dropped-images") {
       updatedDroppedImages.splice(sourceIndex, 1);
     }
 
-    // Add the image to the new tab
-    if (result.destination.droppableId === "uploaded-images") {
+    // Add the dragged image to the new tab
+    if (destinationDroppableId === "uploaded-images") {
       updatedUploadedImages.splice(destinationIndex, 0, draggedImage);
-    } else if (result.destination.droppableId === "dropped-images") {
+    } else if (destinationDroppableId === "dropped-images") {
       updatedDroppedImages.splice(destinationIndex, 0, draggedImage);
     }
 
