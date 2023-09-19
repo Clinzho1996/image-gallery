@@ -235,7 +235,7 @@
 
   .droppedImages img,
   .uploadedImages img {
-    width: 100px;
-    height: 100px;
+    width: 95px;
+    height: 95px;
   }
 }
