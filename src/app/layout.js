@@ -1,4 +1,3 @@
-"use client";
 import AuthProvider from "./components/AuthProvider/AuthProvider";
 import Footer from "./components/footer/Footer";
 import Navbar from "./components/navbar/Header";

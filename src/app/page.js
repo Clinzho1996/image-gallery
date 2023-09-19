@@ -5,7 +5,6 @@ import styles from "./page.module.css";
 import { isAuthenticated } from "./utils/auth";
 import { useRouter } from "next/navigation";
 import UploadedImages from "./components/uploaded/UploadedImages";
-import Search from "./components/search/Search";
 
 function Home() {
   const [images, setImages] = useState([]);
@@ -126,8 +125,6 @@ function Home() {
     <div className={styles.card}>
       <div className={styles.top}>
         <p>Upload & Rearrange your images </p>
-
-        <Search />
       </div>
       <div
         className={styles.drag}
