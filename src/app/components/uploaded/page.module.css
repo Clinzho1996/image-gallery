@@ -41,16 +41,6 @@
   font-weight: 300;
 }
 
-.button {
-  padding: 20px;
-  border: none;
-  background-color: #f84e61;
-  color: #fff;
-  border-radius: 5px;
-  cursor: pointer;
-  width: max-content;
-}
-
 .loader {
   align-items: center;
   display: flex;
@@ -68,15 +58,6 @@
 .card .top {
   text-align: center;
   text-transform: capitalize;
-}
-
-.search {
-  position: absolute;
-  right: 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
 }
 
 .uploadedImagesContainer {
@@ -116,18 +97,6 @@
   font-weight: bold;
   color: #f84e61;
   font-size: 36px;
-}
-
-.card button {
-  outline: 0;
-  border: 0;
-  color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 400;
-  padding: 15px 13px;
-  width: 100%;
-  background: #f84e61;
 }
 
 .card .drag {
@@ -195,14 +164,52 @@
   background-size: cover;
 }
 
-.card input,
-.card .drag .on-drop,
-.card .drag.dragover .visible {
-  display: none;
-}
-
 .deleteCont {
   position: relative;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.searchContainer input {
+  display: block;
+  background-color: #ffffff15;
+  border: 1px solid #fff;
+  padding: 5px;
+  color: #fff;
+  height: 40px;
+  margin-bottom: 100px;
+  margin-top: 100px;
+}
+
+/* Style for the search input */
+.search {
+  flex: 1; /* Take up available space */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  outline: none;
+  display: block;
+}
+
+.searchButton {
+  display: block;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.searchButton:hover {
+  background-color: #0056b3;
 }
 
 .delete {

@@ -1,21 +1,19 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 import styles from "./page.module.css";
 
-function UploadedImages() {
+function UploadedImages({ tags }) {
   const [uploaded, setUploaded] = useState([]);
   const [droppedImages, setDroppedImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    const storedUploadedImages =
-      JSON.parse(localStorage.getItem("uploadedImages")) || [];
-    const storedDroppedImages =
-      JSON.parse(localStorage.getItem("droppedImages")) || [];
+    const storedUploadedData = JSON.parse(localStorage.getItem("uploadedData"));
 
-    setUploaded(storedUploadedImages);
-    setDroppedImages(storedDroppedImages);
+    if (storedUploadedData && Array.isArray(storedUploadedData.images)) {
+      setUploaded(storedUploadedData.images);
+    }
 
     setLoading(false);
   }, []);
@@ -51,15 +49,18 @@ function UploadedImages() {
       updatedDroppedImages.splice(destinationIndex, 0, draggedImage);
     }
 
-    setUploaded(updatedUploadedImages);
-    setDroppedImages(updatedDroppedImages);
-
     // Update local storage for each tab separately
     localStorage.setItem(
-      "uploadedImages",
-      JSON.stringify(updatedUploadedImages)
+      "uploadedData",
+      JSON.stringify({
+        images: updatedUploadedImages,
+        tags: tags, // Update tags when images are rearranged
+      })
     );
-    localStorage.setItem("droppedImages", JSON.stringify(updatedDroppedImages));
+
+    // Update the state with all uploaded images
+    setUploaded(updatedUploadedImages);
+    setDroppedImages(updatedDroppedImages);
   }
 
   // Function to delete an image from the current location
@@ -67,11 +68,17 @@ function UploadedImages() {
     if (droppableId === "uploaded-images") {
       const updatedUploadedImages = [...uploaded];
       updatedUploadedImages.splice(index, 1);
-      setUploaded(updatedUploadedImages);
+
+      // Update local storage and state
       localStorage.setItem(
-        "uploadedImages",
-        JSON.stringify(updatedUploadedImages)
+        "uploadedData",
+        JSON.stringify({
+          images: updatedUploadedImages,
+          tags: tags, // Update tags when an image is deleted
+        })
       );
+
+      setUploaded(updatedUploadedImages);
     } else if (droppableId === "dropped-images") {
       const updatedDroppedImages = [...droppedImages];
       updatedDroppedImages.splice(index, 1);
@@ -84,104 +91,108 @@ function UploadedImages() {
   }
 
   return (
-    <DragDropContext onDragEnd={handleDrop}>
-      <div className={styles.uploadedImagesContainer}>
-        <Droppable droppableId="uploaded-images" direction="horizontal">
-          {(provided) => (
-            <div
-              id="uploadedImages"
-              className={styles.uploadedImages}
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {loading ? (
-                <p
-                  style={{
-                    fontSize: 14,
-                  }}
-                >
-                  Loading...
-                </p>
-              ) : (
-                uploaded.map((image, index) => (
-                  <Draggable
-                    key={image?.name}
-                    draggableId={image?.name}
-                    index={index}
+    <>
+      <DragDropContext onDragEnd={handleDrop}>
+        <div className={styles.uploadedImagesContainer}>
+          <Droppable droppableId="uploaded-images" direction="horizontal">
+            {(provided) => (
+              <div
+                id="uploadedImages"
+                className={styles.uploadedImages}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {loading ? (
+                  <p
+                    style={{
+                      fontSize: 14,
+                    }}
                   >
-                    {(provided) => (
-                      <div
-                        className={styles.deleteCont}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <span
-                          className={styles.delete}
-                          role="button"
-                          onClick={() => deleteImage(index, "uploaded-images")}
+                    Loading...
+                  </p>
+                ) : (
+                  uploaded.map((image, index) => (
+                    <Draggable
+                      key={image?.name}
+                      draggableId={image?.name}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          className={styles.deleteCont}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
                         >
-                          &times;
-                        </span>
-                        <img src={image?.url} alt={image?.name} />
-                      </div>
-                    )}
-                  </Draggable>
-                ))
-              )}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-        <Droppable droppableId="dropped-images" direction="horizontal">
-          {(provided) => (
-            <div
-              id="droppedImages"
-              className={styles.droppedImages}
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {loading ? (
-                <p
-                  style={{
-                    fontSize: 14,
-                  }}
-                >
-                  Loading...
-                </p>
-              ) : (
-                droppedImages.map((image, index) => (
-                  <Draggable
-                    key={image.name}
-                    draggableId={image.name}
-                    index={index}
+                          <span
+                            className={styles.delete}
+                            role="button"
+                            onClick={() =>
+                              deleteImage(index, "uploaded-images")
+                            }
+                          >
+                            &times;
+                          </span>
+                          <img src={image?.url} alt={image?.name} />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))
+                )}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+          <Droppable droppableId="dropped-images" direction="horizontal">
+            {(provided) => (
+              <div
+                id="droppedImages"
+                className={styles.droppedImages}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {loading ? (
+                  <p
+                    style={{
+                      fontSize: 14,
+                    }}
                   >
-                    {(provided) => (
-                      <div
-                        className={styles.deleteCont}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <span
-                          className={styles.delete}
-                          role="button"
-                          onClick={() => deleteImage(index, "dropped-images")}
+                    Loading...
+                  </p>
+                ) : (
+                  droppedImages.map((image, index) => (
+                    <Draggable
+                      key={image.name}
+                      draggableId={image.name}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          className={styles.deleteCont}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
                         >
-                          &times;
-                        </span>
-                        <img src={image.url} alt={image.name} />
-                      </div>
-                    )}
-                  </Draggable>
-                ))
-              )}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </div>
-    </DragDropContext>
+                          <span
+                            className={styles.delete}
+                            role="button"
+                            onClick={() => deleteImage(index, "dropped-images")}
+                          >
+                            &times;
+                          </span>
+                          <img src={image.url} alt={image.name} />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))
+                )}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </div>
+      </DragDropContext>
+    </>
   );
 }
 

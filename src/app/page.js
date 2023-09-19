@@ -9,6 +9,8 @@ import UploadedImages from "./components/uploaded/UploadedImages";
 function Home() {
   const [images, setImages] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
   const fileInputRef = useRef(null);
   const router = useRouter();
   const [alertMessage, setAlertMessage] = useState("");
@@ -34,6 +36,7 @@ function Home() {
     const files = event.target.files;
     if (files.length === 0) return;
     const newImages = [...images];
+    const newTags = [...tags]; // Create a new array for tags
     for (let i = 0; i < files.length; i++) {
       if (files[i].type.split("/")[0] !== "image") continue;
       if (!newImages.some((e) => e.name === files[i].name)) {
@@ -41,9 +44,17 @@ function Home() {
           name: files[i].name,
           url: URL.createObjectURL(files[i]),
         });
+        newTags.push(""); // Add an empty tag for each image
       }
     }
     setImages(newImages);
+    setTags(newTags); // Update the tags state
+  }
+
+  function handleTagInputChange(index, value) {
+    const newTags = [...tags];
+    newTags[index] = value;
+    setTags(newTags);
   }
 
   function onDragOver(event) {
@@ -77,6 +88,7 @@ function Home() {
 
   function deleteImage(index) {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setTags((prevTags) => prevTags.filter((_, i) => i !== index));
   }
 
   function uploadImages() {
@@ -86,31 +98,25 @@ function Home() {
       return;
     }
 
-    // Retrieve previously uploaded images from local storage
-    const existingImages =
-      JSON.parse(localStorage.getItem("uploadedImages")) || [];
+    // Retrieve previously uploaded images and tags from local storage
+    const existingData = JSON.parse(localStorage.getItem("uploadedData")) || {
+      images: [],
+      tags: [],
+    };
 
-    // Combine existing images and newly uploaded images
-    const combinedImages = [...existingImages, ...images];
+    // Combine existing images, tags, and newly uploaded images and tags
+    const combinedImages = [...existingData.images, ...images];
+    const combinedTags = [...existingData.tags, ...tags];
 
-    // Store the combined images in local storage
-    localStorage.setItem("uploadedImages", JSON.stringify(combinedImages));
+    // Store the combined data in local storage
+    localStorage.setItem(
+      "uploadedData",
+      JSON.stringify({ images: combinedImages, tags: combinedTags })
+    );
 
-    // Clear the images array
+    // Clear the images and tags arrays
     setImages([]);
-
-    // Display the combined images in a viewable div
-    const uploadedImagesDiv = document.getElementById("uploadedImages");
-    if (uploadedImagesDiv) {
-      uploadedImagesDiv.innerHTML = "";
-      combinedImages.forEach((image) => {
-        const imgElement = document.createElement("img");
-        imgElement.src = image.url;
-        imgElement.alt = image.name;
-        imgElement.draggable = true; // Make the image draggable
-        uploadedImagesDiv.appendChild(imgElement);
-      });
-    }
+    setTags([]);
 
     // Show alert for successful upload
     setAlertMessage("Image was uploaded successfully!");
@@ -118,7 +124,7 @@ function Home() {
     // Automatically reload the app after a few seconds
     setTimeout(() => {
       window.location.reload();
-    }, 1000); // Reload after 3 seconds
+    }, 1000);
   }
 
   return (
@@ -168,6 +174,13 @@ function Home() {
               &times;
             </span>
             <img src={images.url} alt={images.name} />
+            <input
+              type="text"
+              placeholder="Enter tag"
+              className={styles.tagInput}
+              value={tags[index]}
+              onChange={(e) => handleTagInputChange(index, e.target.value)}
+            />
           </div>
         ))}
       </div>
@@ -176,7 +189,7 @@ function Home() {
       </button>
       {/* Display the alert message */}
       {alertMessage && <div className={styles.alert}>{alertMessage}</div>}
-      <UploadedImages />
+      <UploadedImages tags={tags} />
     </div>
   );
 }
