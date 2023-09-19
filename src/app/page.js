@@ -43,6 +43,7 @@ function Home() {
         newImages.push({
           name: files[i].name,
           url: URL.createObjectURL(files[i]),
+          tags: "",
         });
         newTags.push(""); // Add an empty tag for each image
       }

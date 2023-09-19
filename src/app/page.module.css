@@ -186,6 +186,10 @@
   display: none;
 }
 
+.searchTag {
+  display: block;
+}
+
 .container input {
   display: block;
   background-color: #ffffff15;

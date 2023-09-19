@@ -90,8 +90,62 @@ function UploadedImages({ tags }) {
     }
   }
 
+  function searchImages() {
+    // Retrieve the saved tags from local storage
+    const storedUploadedData = JSON.parse(localStorage.getItem("uploadedData"));
+    const savedTags = storedUploadedData?.tags || [];
+
+    // Filter images based on the searchQuery and saved tags
+    const filteredImages = uploaded.filter((image, index) => {
+      if (!searchQuery) return true; // Show all images if search query is empty
+
+      // Check if the image has tags and if any of them match the searchQuery or saved tags
+      if (Array.isArray(image.tags)) {
+        const hasMatchingTag = image.tags.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        const hasSavedTag = savedTags[index]
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
+
+        return hasMatchingTag || hasSavedTag;
+      }
+      return false; // Filter out images without tags
+    });
+
+    // Update the state with filtered images
+    setUploaded(filteredImages);
+  }
+
+  // Function to reset the search and show all images
+  function resetSearch() {
+    setSearchQuery("");
+    const storedUploadedData = JSON.parse(localStorage.getItem("uploadedData"));
+
+    if (storedUploadedData && Array.isArray(storedUploadedData.images)) {
+      setUploaded(storedUploadedData.images);
+    }
+  }
+
   return (
     <>
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Search by tags"
+          className={styles.searchTag}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <div className={styles.btn}>
+          <button onClick={searchImages} className={styles.btnSearch}>
+            Search
+          </button>
+          <button onClick={resetSearch} className={styles.btnReset}>
+            Reset
+          </button>
+        </div>
+      </div>
       <DragDropContext onDragEnd={handleDrop}>
         <div className={styles.uploadedImagesContainer}>
           <Droppable droppableId="uploaded-images" direction="horizontal">
