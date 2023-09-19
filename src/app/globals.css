@@ -46,6 +46,13 @@ a:active {
   color: inherit;
 }
 
+.light input {
+  border: 1px solid #111 !important;
+}
+
+.light button {
+  background-color: #4fa2ca;
+}
 .theme {
   transition: 1s all ease;
 }
