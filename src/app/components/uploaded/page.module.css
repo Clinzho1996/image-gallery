@@ -104,7 +104,7 @@
 .uploadedImages img,
 .droppedImages img,
 .placeholder img {
-  width: 223px;
+  width: 205px;
   height: 230px;
   border: 1px solid #f84e61;
   border-radius: 6px;
