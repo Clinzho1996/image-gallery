@@ -17,12 +17,12 @@ function UploadedImages({ tags }) {
         {
           name: "Default Image 1",
           url: "https://pbs.twimg.com/profile_images/1528837727722029056/XwHdBNR5_400x400.jpg",
-          tags: "Dev Clinton, Confidence Emonena Ochuko",
+          tags: "dev clinton, confidence emonena ochuko",
         },
         {
           name: "Default Image 2",
           url: "https://static.independent.co.uk/2023/09/18/15/Asian_Champions_League_Preview_47615.jpg",
-          tags: "Ronaldo, footballer",
+          tags: "Ronaldo, rronaldo, footballer",
         },
       ];
       const combinedImages = [...defaultImages, ...storedUploadedData.images];
@@ -120,38 +120,33 @@ function UploadedImages({ tags }) {
     }
   }
 
-  function searchImages() {
-    // Retrieve the saved tags from local storage
-    const storedUploadedData = JSON.parse(localStorage.getItem("uploadedData"));
-    const savedTags = storedUploadedData?.tags || [];
+  const handleSearch = (searchQuery) => {
+    // Ensure searchQuery is a string
+    if (typeof searchQuery !== "string") {
+      console.error("Invalid search query:", searchQuery);
+      return;
+    }
 
-    // Filter images based on the searchQuery and saved tags
-    const filteredImages = uploaded.filter((image, index) => {
-      if (!searchQuery) return true; // Show all images if search query is empty
-
-      // Check if the image has tags and if any of them match the searchQuery or saved tags
-      if (Array.isArray(image.tags)) {
-        const hasMatchingTag = image.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        const hasSavedTag = savedTags[index]
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase());
-
-        return hasMatchingTag || hasSavedTag;
+    const filteredImages = uploaded.filter((image) => {
+      // Ensure image.tags is a string
+      if (typeof image.tags !== "string") {
+        console.error("Invalid tags for image:", image);
+        return false; // Skip this image
       }
-      return false; // Filter out images without tags
+
+      const imageTags = image.tags.split(",").map((tag) => tag.trim());
+      return imageTags.includes(searchQuery);
     });
 
-    // Update the state with filtered images
+    // Update the state with filteredImages
     setUploaded(filteredImages);
-  }
+  };
 
   // Function to reset the search and show all images
   function resetSearch() {
-    setSearchQuery("");
+    setSearchQuery(""); // Reset searchQuery to an empty string
+    // Retrieve the original uploaded images from local storage and set the state
     const storedUploadedData = JSON.parse(localStorage.getItem("uploadedData"));
-
     if (storedUploadedData && Array.isArray(storedUploadedData.images)) {
       setUploaded(storedUploadedData.images);
     }
@@ -168,7 +163,10 @@ function UploadedImages({ tags }) {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <div className={styles.btn}>
-          <button onClick={searchImages} className={styles.btnSearch}>
+          <button
+            onClick={() => handleSearch(searchQuery)}
+            className={styles.btnSearch}
+          >
             Search
           </button>
           <button onClick={resetSearch} className={styles.btnReset}>
