@@ -19,6 +19,16 @@ function UploadedImages({ tags }) {
           url: "https://media.licdn.com/dms/image/C4E03AQFi9k8dhOmkcQ/profile-displayphoto-shrink_800_800/0/1607973914785?e=2147483647&v=beta&t=nSNwwfjqSezP0f__Y-aMHC17SIrxmiHB31GyreHCEAU",
           tags: "Dev Clinton, Confidence Emonena Ochuko",
         },
+        {
+          name: "Default Image 1",
+          url: "https://pbs.twimg.com/profile_images/1528837727722029056/XwHdBNR5_400x400.jpg",
+          tags: "Dev Clinton, Confidence Emonena Ochuko",
+        },
+        {
+          name: "Default Image 2",
+          url: "https://static.independent.co.uk/2023/09/18/15/Asian_Champions_League_Preview_47615.jpg",
+          tags: "Ronaldo, footballer",
+        },
       ];
       const combinedImages = [...defaultImages, ...storedUploadedData.images];
 
