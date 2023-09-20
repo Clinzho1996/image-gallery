@@ -5,6 +5,7 @@ import styles from "./page.module.css";
 function UploadedImages({ tags }) {
   const [uploaded, setUploaded] = useState([]);
   const [droppedImages, setDroppedImages] = useState([]);
+  const [originalUploaded, setOriginalUploaded] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -12,24 +13,9 @@ function UploadedImages({ tags }) {
     const storedUploadedData = JSON.parse(localStorage.getItem("uploadedData"));
 
     if (storedUploadedData && Array.isArray(storedUploadedData.images)) {
-      // Combine default images and uploaded images
-      const defaultImages = [
-        {
-          name: "Default Image 1",
-          url: "https://pbs.twimg.com/profile_images/1528837727722029056/XwHdBNR5_400x400.jpg",
-          tags: "dev clinton, confidence emonena ochuko",
-        },
-        {
-          name: "Default Image 2",
-          url: "https://static.independent.co.uk/2023/09/18/15/Asian_Champions_League_Preview_47615.jpg",
-          tags: "Ronaldo, ronaldo, footballer",
-        },
-      ];
-      const combinedImages = [...defaultImages, ...storedUploadedData.images];
-
-      setUploaded(combinedImages);
+      setOriginalUploaded(storedUploadedData.images); // Store the original images
+      setUploaded(storedUploadedData.images);
     } else {
-      // If no stored data, set default images
       const defaultImages = [
         {
           name: "Default Image 1",
@@ -42,6 +28,7 @@ function UploadedImages({ tags }) {
           tags: "Ronaldo, footballer",
         },
       ];
+      setOriginalUploaded(defaultImages); // Store the default images
       setUploaded(defaultImages);
     }
 
@@ -127,6 +114,8 @@ function UploadedImages({ tags }) {
       return;
     }
 
+    const lowercaseSearchQuery = searchQuery.toLowerCase(); // Convert search query to lowercase
+
     const filteredImages = uploaded.filter((image) => {
       // Ensure image.tags is a string
       if (typeof image.tags !== "string") {
@@ -134,8 +123,8 @@ function UploadedImages({ tags }) {
         return false; // Skip this image
       }
 
-      const imageTags = image.tags.split(",").map((tag) => tag.trim());
-      return imageTags.includes(searchQuery);
+      const lowercaseImageTags = image.tags.toLowerCase(); // Convert image tags to lowercase
+      return lowercaseImageTags.includes(lowercaseSearchQuery);
     });
 
     // Update the state with filteredImages
@@ -145,11 +134,7 @@ function UploadedImages({ tags }) {
   // Function to reset the search and show all images
   function resetSearch() {
     setSearchQuery(""); // Reset searchQuery to an empty string
-    // Retrieve the original uploaded images from local storage and set the state
-    const storedUploadedData = JSON.parse(localStorage.getItem("uploadedData"));
-    if (storedUploadedData && Array.isArray(storedUploadedData.images)) {
-      setUploaded(storedUploadedData.images);
-    }
+    setUploaded(originalUploaded); // Restore the original images
   }
 
   return (
