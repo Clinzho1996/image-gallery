@@ -18,6 +18,25 @@ function UploadedImages({ tags }) {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    // Default images and tags
+    const defaultImages = [
+      {
+        name: "Default Image 1",
+        url: "https://pbs.twimg.com/profile_images/1528837727722029056/XwHdBNR5_400x400.jpg",
+        tags: "Dev Clinton, Confidence Emonena Ochuko",
+      },
+      {
+        name: "Default Image 2",
+        url: "https://static.independent.co.uk/2023/09/18/15/Asian_Champions_League_Preview_47615.jpg",
+        tags: "Ronaldo, footballer",
+      },
+    ];
+
+    setUploaded(defaultImages);
+    setLoading(false);
+  }, []);
+
   function handleDrop(result) {
     if (!result.destination) return;
 

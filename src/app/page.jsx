@@ -23,7 +23,7 @@ function Home() {
     if (session?.status === "unauthenticated") {
       // Show a toast alert when not logged in
       toast.error("You are not logged in.", {
-        autoClose: 3000,
+        autoClose: 5000,
         onClose: () => {
           router.push("/login");
         },
