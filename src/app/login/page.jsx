@@ -93,7 +93,7 @@ const Login = () => {
         />
         <button className={styles.button}>Login</button>
         {formSubmitted && error !== "" && (
-          <p style={{ color: "red" }}>Something went wrong!</p>
+          <p style={{ color: "red" }}>Email or Password incorrect!</p>
         )}
       </form>
       <span className={styles.or}>- OR -</span>

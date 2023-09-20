@@ -10,7 +10,6 @@ function Home() {
   const [images, setImages] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const [tags, setTags] = useState([]);
-  const [tagInput, setTagInput] = useState("");
   const fileInputRef = useRef(null);
   const router = useRouter();
   const [alertMessage, setAlertMessage] = useState("");
