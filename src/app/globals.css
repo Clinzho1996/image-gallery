@@ -48,6 +48,7 @@ a:active {
 
 .light input {
   border: 1px solid #111 !important;
+  color: #111 !important;
 }
 
 .light button {
