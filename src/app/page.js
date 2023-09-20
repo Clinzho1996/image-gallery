@@ -2,11 +2,14 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
-import { isAuthenticated } from "./utils/auth";
+import { useSession, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import UploadedImages from "./components/uploaded/UploadedImages";
+import Image from "next/image";
 
 function Home() {
+  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const [tags, setTags] = useState([]);
@@ -15,17 +18,25 @@ function Home() {
   const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
-    // Check authentication when the component mounts
-    const checkAuthentication = async () => {
-      const authenticated = await isAuthenticated();
-
-      if (!authenticated) {
-        router.push("/login");
-      }
-    };
-
-    checkAuthentication();
+    // Fetch the session data once during component mount
+    getSession().then(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      if (!session || status !== "authenticated") {
+        router.replace("/login");
+      }
+    }
+  }, [loading, session, status, router]);
+
+  if (loading) {
+    return (
+      <div className={styles.loader}>
+        <Image src="/loader.svg" alt="loading" width={100} height={100} />
+      </div>
+    );
+  }
 
   function onSelectFiles() {
     fileInputRef.current.click();
