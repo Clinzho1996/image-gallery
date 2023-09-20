@@ -11,11 +11,27 @@ function UploadedImages({ tags }) {
 
   useEffect(() => {
     const storedUploadedData = JSON.parse(localStorage.getItem("uploadedData"));
+    let combinedImages = []; // Define combinedImages outside the if-else block
 
     if (storedUploadedData && Array.isArray(storedUploadedData.images)) {
-      setOriginalUploaded(storedUploadedData.images); // Store the original images
-      setUploaded(storedUploadedData.images);
+      // Combine default images and uploaded images
+      const defaultImages = [
+        {
+          name: "Default Image 1",
+          url: "https://pbs.twimg.com/profile_images/1528837727722029056/XwHdBNR5_400x400.jpg",
+          tags: "Dev clinton, Confidence Emonena Ochuko",
+        },
+        {
+          name: "Default Image 2",
+          url: "https://static.independent.co.uk/2023/09/18/15/Asian_Champions_League_Preview_47615.jpg",
+          tags: "Ronaldo, footballer",
+        },
+      ];
+      combinedImages = [...defaultImages, ...storedUploadedData.images];
+
+      setUploaded(combinedImages);
     } else {
+      // If no stored data, set default images
       const defaultImages = [
         {
           name: "Default Image 1",
@@ -28,10 +44,13 @@ function UploadedImages({ tags }) {
           tags: "Ronaldo, footballer",
         },
       ];
-      setOriginalUploaded(defaultImages); // Store the default images
+      combinedImages = defaultImages;
+
       setUploaded(defaultImages);
     }
 
+    // Set the originalUploaded state after the if-else block
+    setOriginalUploaded(combinedImages);
     setLoading(false);
   }, []);
 
@@ -134,7 +153,8 @@ function UploadedImages({ tags }) {
   // Function to reset the search and show all images
   function resetSearch() {
     setSearchQuery(""); // Reset searchQuery to an empty string
-    setUploaded(originalUploaded); // Restore the original images
+    // Restore the original images
+    setUploaded(originalUploaded); // Use the originalUploaded state variable
   }
 
   return (
