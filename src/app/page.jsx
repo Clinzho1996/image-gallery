@@ -6,37 +6,30 @@ import { useSession, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import UploadedImages from "./components/uploaded/UploadedImages";
 import Image from "next/image";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Home() {
-  const { data: session, status } = useSession();
+  const session = useSession();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const [tags, setTags] = useState([]);
   const fileInputRef = useRef(null);
-  const router = useRouter();
   const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
-    // Fetch the session data once during component mount
-    getSession().then(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    if (!loading) {
-      if (!session || status !== "authenticated") {
-        router.replace("/login");
-      }
+    if (session?.status === "unauthenticated") {
+      // Show a toast alert when not logged in
+      toast.error("You are not logged in.", {
+        autoClose: 3000,
+        onClose: () => {
+          router.push("/login");
+        },
+      });
     }
-  }, [loading, session, status, router]);
-
-  if (loading) {
-    return (
-      <div className={styles.loader}>
-        <Image src="/loader.svg" alt="loading" width={100} height={100} />
-      </div>
-    );
-  }
+  }, [session, router]);
 
   function onSelectFiles() {
     fileInputRef.current.click();
@@ -140,6 +133,7 @@ function Home() {
 
   return (
     <div className={styles.card}>
+      <ToastContainer />
       <div className={styles.top}>
         <p>Upload & Rearrange your images </p>
       </div>
