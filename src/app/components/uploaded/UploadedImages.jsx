@@ -22,7 +22,7 @@ function UploadedImages({ tags }) {
         {
           name: "Default Image 2",
           url: "https://static.independent.co.uk/2023/09/18/15/Asian_Champions_League_Preview_47615.jpg",
-          tags: "Ronaldo, rronaldo, footballer",
+          tags: "Ronaldo, ronaldo, footballer",
         },
       ];
       const combinedImages = [...defaultImages, ...storedUploadedData.images];
