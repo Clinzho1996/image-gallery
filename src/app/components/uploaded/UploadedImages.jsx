@@ -19,7 +19,6 @@ function UploadedImages({ tags }) {
       setUploaded(storedUploadedData.images);
       setOriginalUploaded(storedUploadedData.images);
     } else {
-      // Set default images if uploaded is empty
       const defaultImages = [
         {
           name: "Default Image 1",
@@ -98,28 +97,11 @@ function UploadedImages({ tags }) {
       })
     );
 
+    localStorage.setItem("droppedImages", JSON.stringify(updatedDroppedImages));
+
     // Update the state with all uploaded images
     setUploaded(updatedUploadedImages);
     setDroppedImages(updatedDroppedImages);
-  }
-
-  // Function to delete an image from the current location
-  function deleteImage(index, droppableId) {
-    if (droppableId === "uploaded-images") {
-      const updatedUploadedImages = [...uploaded];
-      updatedUploadedImages.splice(index, 1);
-
-      // Update local storage and state
-      localStorage.setItem(
-        "uploadedData",
-        JSON.stringify({
-          images: updatedUploadedImages,
-          tags: tags, // Update tags when an image is deleted
-        })
-      );
-
-      setUploaded(updatedUploadedImages);
-    }
   }
 
   const handleSearch = (searchQuery) => {
