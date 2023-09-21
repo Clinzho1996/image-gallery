@@ -11,42 +11,15 @@ function UploadedImages({ tags }) {
 
   useEffect(() => {
     const storedUploadedData = JSON.parse(localStorage.getItem("uploadedData"));
-    let combinedImages = []; // Define combinedImages outside the if-else block
+    const storedDroppedImages = JSON.parse(
+      localStorage.getItem("droppedImages")
+    );
 
     if (storedUploadedData && Array.isArray(storedUploadedData.images)) {
-      // Combine default images and uploaded images
-      const defaultImages = [
-        {
-          name: "Default Image 1",
-          url: "https://pbs.twimg.com/profile_images/1528837727722029056/XwHdBNR5_400x400.jpg",
-          tags: "Dev clinton, Confidence Emonena Ochuko",
-        },
-        {
-          name: "Default Image 2",
-          url: "https://static.independent.co.uk/2023/09/18/15/Asian_Champions_League_Preview_47615.jpg",
-          tags: "Ronaldo, footballer, Cristiano, Goat",
-        },
-        {
-          name: "Default Image 3",
-          url: "https://cloudfront-us-east-1.images.arcpublishing.com/pmn/OPKHDT2FBPB3Z6WJLYOWTUX3TI.jpg",
-          tags: "Messi, Lionel, Goat, footballer",
-        },
-        {
-          name: "Default Image 4",
-          url: "https://upload.wikimedia.org/wikipedia/commons/6/65/20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Neymar_850_1705.jpg",
-          tags: "Neymar, footballer, Brazil",
-        },
-        {
-          name: "Default Image 5",
-          url: "https://dailypost.ng/wp-content/uploads/2023/05/Osimhen.jpeg",
-          tags: "Osimhen, footballer, Victor, Nigeria, Napoli",
-        },
-      ];
-      combinedImages = [...defaultImages, ...storedUploadedData.images];
-
-      setUploaded(combinedImages);
+      setUploaded(storedUploadedData.images);
+      setOriginalUploaded(storedUploadedData.images);
     } else {
-      // If no stored data, set default images
+      // Set default images if uploaded is empty
       const defaultImages = [
         {
           name: "Default Image 1",
@@ -74,13 +47,14 @@ function UploadedImages({ tags }) {
           tags: "Osimhen, footballer, Victor, Nigeria, Napoli",
         },
       ];
-      combinedImages = defaultImages;
-
       setUploaded(defaultImages);
+      setOriginalUploaded(defaultImages);
     }
 
-    // Set the originalUploaded state after the if-else block
-    setOriginalUploaded(combinedImages);
+    if (storedDroppedImages && Array.isArray(storedDroppedImages)) {
+      setDroppedImages(storedDroppedImages);
+    }
+
     setLoading(false);
   }, []);
 
@@ -145,14 +119,6 @@ function UploadedImages({ tags }) {
       );
 
       setUploaded(updatedUploadedImages);
-    } else if (droppableId === "dropped-images") {
-      const updatedDroppedImages = [...droppedImages];
-      updatedDroppedImages.splice(index, 1);
-      setDroppedImages(updatedDroppedImages);
-      localStorage.setItem(
-        "droppedImages",
-        JSON.stringify(updatedDroppedImages)
-      );
     }
   }
 
@@ -241,15 +207,6 @@ function UploadedImages({ tags }) {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                          <span
-                            className={styles.delete}
-                            role="button"
-                            onClick={() =>
-                              deleteImage(index, "uploaded-images")
-                            }
-                          >
-                            &times;
-                          </span>
                           <img src={image?.url} alt={image?.name} />
                         </div>
                       )}
@@ -290,13 +247,6 @@ function UploadedImages({ tags }) {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                          <span
-                            className={styles.delete}
-                            role="button"
-                            onClick={() => deleteImage(index, "dropped-images")}
-                          >
-                            &times;
-                          </span>
                           <img src={image.url} alt={image.name} />
                         </div>
                       )}
