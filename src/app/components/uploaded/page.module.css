@@ -91,6 +91,7 @@
   border-radius: 6px;
   margin-right: 10px;
   margin-top: 10px;
+  object-fit: cover;
 }
 
 .card p {

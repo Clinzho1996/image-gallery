@@ -24,7 +24,22 @@ function UploadedImages({ tags }) {
         {
           name: "Default Image 2",
           url: "https://static.independent.co.uk/2023/09/18/15/Asian_Champions_League_Preview_47615.jpg",
-          tags: "Ronaldo, footballer",
+          tags: "Ronaldo, footballer, Cristiano, Goat",
+        },
+        {
+          name: "Default Image 3",
+          url: "https://cloudfront-us-east-1.images.arcpublishing.com/pmn/OPKHDT2FBPB3Z6WJLYOWTUX3TI.jpg",
+          tags: "Messi, Lionel, Goat, footballer",
+        },
+        {
+          name: "Default Image 4",
+          url: "https://upload.wikimedia.org/wikipedia/commons/6/65/20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Neymar_850_1705.jpg",
+          tags: "Neymar, footballer, Brazil",
+        },
+        {
+          name: "Default Image 5",
+          url: "https://dailypost.ng/wp-content/uploads/2023/05/Osimhen.jpeg",
+          tags: "Osimhen, footballer, Victor, Nigeria, Napoli",
         },
       ];
       combinedImages = [...defaultImages, ...storedUploadedData.images];
@@ -36,12 +51,27 @@ function UploadedImages({ tags }) {
         {
           name: "Default Image 1",
           url: "https://pbs.twimg.com/profile_images/1528837727722029056/XwHdBNR5_400x400.jpg",
-          tags: "Dev Clinton, Confidence Emonena Ochuko",
+          tags: "Dev clinton, Confidence Emonena Ochuko",
         },
         {
           name: "Default Image 2",
           url: "https://static.independent.co.uk/2023/09/18/15/Asian_Champions_League_Preview_47615.jpg",
-          tags: "Ronaldo, footballer",
+          tags: "Ronaldo, footballer, Cristiano, Goat",
+        },
+        {
+          name: "Default Image 3",
+          url: "https://cloudfront-us-east-1.images.arcpublishing.com/pmn/OPKHDT2FBPB3Z6WJLYOWTUX3TI.jpg",
+          tags: "Messi, Lionel, Goat, footballer",
+        },
+        {
+          name: "Default Image 4",
+          url: "https://upload.wikimedia.org/wikipedia/commons/6/65/20180610_FIFA_Friendly_Match_Austria_vs._Brazil_Neymar_850_1705.jpg",
+          tags: "Neymar, footballer, Brazil",
+        },
+        {
+          name: "Default Image 5",
+          url: "https://dailypost.ng/wp-content/uploads/2023/05/Osimhen.jpeg",
+          tags: "Osimhen, footballer, Victor, Nigeria, Napoli",
         },
       ];
       combinedImages = defaultImages;
